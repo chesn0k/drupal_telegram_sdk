@@ -1,0 +1,14 @@
+drupal_telegram_sdk.telegram_bot.*:
+  type: config_entity
+  label: Telegram Bot
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+    token:
+      type: string

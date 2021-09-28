@@ -1,0 +1,7 @@
+name: Drupal Telegram SDK
+type: module
+description: 'Provides a telegram bot configuration entity.'
+package: Custom
+core: 8.x
+core_version_requirement: ^8 || ^9
+configure: entity.telegram_bot.collection

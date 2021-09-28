@@ -1,0 +1,5 @@
+entity.telegram_bot.add_form:
+  route_name: 'entity.telegram_bot.add_form'
+  title: 'Add telegram bot'
+  appears_on:
+    - entity.telegram_bot.collection

@@ -1,0 +1,4 @@
+services:
+  plugin.manager.telegram_command:
+    class: Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager
+    parent: default_plugin_manager
