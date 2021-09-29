@@ -14,9 +14,12 @@ class TelegramBotListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('Label');
-    $header['id'] = $this->t('Machine name');
-    $header['status'] = $this->t('Status');
+    $header = [
+      'label' => $this->t('Label'),
+      'id' => $this->t('Machine name'),
+      'status' => $this->t('Status'),
+    ];
+
     return $header + parent::buildHeader();
   }
 
@@ -24,10 +27,13 @@ class TelegramBotListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\drupal_telegram_sdk\TelegramBotInterface $entity */
-    $row['label'] = $entity->label();
-    $row['id'] = $entity->id();
-    $row['status'] = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
+    /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $entity */
+    $row = [
+      'label' => $entity->label(),
+      'id' => $entity->id(),
+      'status' => $entity->status() ? $this->t('Enabled') : $this->t('Disabled'),
+    ];
+
     return $row + parent::buildRow($entity);
   }
 

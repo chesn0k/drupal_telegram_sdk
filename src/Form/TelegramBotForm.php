@@ -59,12 +59,14 @@ class TelegramBotForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $result = parent::save($form, $form_state);
+
     $message_args = ['%label' => $this->entity->label()];
-    $message = $result == SAVED_NEW
+    $message = $result == $this->entity->isNew()
       ? $this->t('Created new telegram bot %label.', $message_args)
       : $this->t('Updated telegram bot %label.', $message_args);
     $this->messenger()->addStatus($message);
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+
     return $result;
   }
 
