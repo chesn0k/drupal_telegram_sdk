@@ -40,7 +40,7 @@ class TelegramCommand extends Plugin {
    *
    * @var array
    */
-  public $bots_ids;
+  public $bots_id;
 
   /**
    * @see \Telegram\Bot\Commands\Command::$aliases

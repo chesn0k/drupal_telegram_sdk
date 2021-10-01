@@ -10,16 +10,39 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface TelegramBotInterface extends ConfigEntityInterface {
 
   /**
-   * Get API this Telegram Bot
+   * Gets the telegram bot label.
    *
-   * @return \Telegram\Bot\Api
+   * @return string
+   *  The telegram bot label.
    */
-  public function getTelegramBotApi();
+  public function getLabel();
 
   /**
-   * Set a Webhook to receive incoming updates via an outgoing webhook.
+   * Sets the telegram bot label.
    *
-   * @return bool
+   * @param string $label
+   *  The telegram bot label.
+   *
+   * @return $this
    */
-  public function setTelegramBotWebhook();
+  public function setLabel(string $label);
+
+  /**
+   * Gets the telegram bot token.
+   *
+   * @return string
+   *  The telegram bot token.
+   */
+  public function getToken();
+
+  /**
+   * Sets the telegram bot token.
+   *
+   * @param string $token
+   *  The telegram bot token.
+   *
+   * @return $this
+   */
+  public function setToken(string $token);
+
 }
