@@ -1,0 +1,10 @@
+{
+    "name": "drupal/drupal_telegram_sdk",
+    "type": "drupal-module",
+    "description": "Integration of the Telegram SDK library for Drupal",
+    "license": "GPL-3.0",
+    "homepage": "https://www.drupal.org/project/drupal_telegram_sdk",
+    "require": {
+        "irazasyed/telegram-bot-sdk": "^3.4"
+    }
+}
