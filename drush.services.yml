@@ -1,0 +1,5 @@
+services:
+  drupal_telegram_sdk.plugin_generator:
+    class: Drupal\drupal_telegram_sdk\Generator\TelegramCommandGenerator
+    tags:
+      - { name: drush.generator }

@@ -35,12 +35,12 @@ class TelegramCommand extends Plugin {
   public $description;
 
   /**
-   * List of bots for which this command is available, pass an empty array if
-   * the command is available to all bots
+   * List of bots for which this command is available, empty array if
+   * the command is available to all bots.
    *
    * @var array
    */
-  public $bots_id;
+  public $bots_id = [];
 
   /**
    * @see \Telegram\Bot\Commands\Command::$aliases
