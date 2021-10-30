@@ -1,2 +1,4 @@
 administer telegram_bot:
   title: 'Administer telegram bot'
+access telegram_chat overview:
+  title: 'Access telegram chat overview'

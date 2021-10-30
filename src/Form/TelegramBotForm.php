@@ -48,7 +48,7 @@ class TelegramBotForm extends EntityForm {
     $form['status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enabled'),
-      '#default_value' => $this->entity->status(),
+      '#default_value' => $this->getEntity()->status(),
     ];
 
     return $form;
@@ -60,12 +60,12 @@ class TelegramBotForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $result = parent::save($form, $form_state);
 
-    $message_args = ['%label' => $this->entity->label()];
-    $message = $result == $this->entity->isNew()
+    $message_args = ['%label' => $this->getEntity()->label()];
+    $message = $result == $this->getEntity()->isNew()
       ? $this->t('Created new telegram bot %label.', $message_args)
       : $this->t('Updated telegram bot %label.', $message_args);
     $this->messenger()->addStatus($message);
-    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+    $form_state->setRedirectUrl($this->getEntity()->toUrl('collection'));
 
     return $result;
   }
