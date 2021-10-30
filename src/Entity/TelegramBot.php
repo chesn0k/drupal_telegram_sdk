@@ -93,7 +93,6 @@ class TelegramBot extends ConfigEntityBase implements TelegramBotInterface {
       ->getTelegramBotApi($this->id);
 
     $string_url = $this->toUrl('webhook', ['absolute' => TRUE])->toString();
-    $string_url = $string_url . '?XDEBUG_SESSION_START=d4d';
     $telegram_api->setWebhook(['url' => $string_url]);
   }
 
