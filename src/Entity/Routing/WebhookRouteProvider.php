@@ -2,41 +2,12 @@
 
 namespace Drupal\drupal_telegram_sdk\Entity\Routing;
 
-use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class WebhookRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Constructs a new WebhookRouteProvider.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $container->get('entity_type.manager')
-    );
-  }
+class WebhookRouteProvider implements EntityRouteProviderInterface {
 
   /**
    * {@inheritDoc}

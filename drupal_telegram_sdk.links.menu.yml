@@ -1,5 +1,5 @@
 entity.telegram_bot.overview:
-  title: Telegram Bots
+  title: 'Telegram Bots'
   parent: system.admin_structure
   description: 'List of telegram bots.'
   route_name: entity.telegram_bot.collection

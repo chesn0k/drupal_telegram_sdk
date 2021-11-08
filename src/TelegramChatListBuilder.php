@@ -6,9 +6,17 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TelegramChatListBuilder extends EntityListBuilder {
+
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface;
+   */
+  protected $routeMatch;
 
   /**
    * Constructs a new TelegramChatListBuilder object.
@@ -18,8 +26,10 @@ class TelegramChatListBuilder extends EntityListBuilder {
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *  The entity storage class.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, RouteMatchInterface $route_match) {
     parent::__construct($entity_type, $storage);
+
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -29,7 +39,16 @@ class TelegramChatListBuilder extends EntityListBuilder {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage('telegram_chat'),
+      $container->get('current_route_match'),
     );
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function load() {
+    $telegram_bot = $this->routeMatch->getParameter('telegram_bot');
+    return $this->storage->loadByProperties(['bot' => $telegram_bot->id()]);
   }
 
   /**
@@ -39,7 +58,6 @@ class TelegramChatListBuilder extends EntityListBuilder {
     $header = [
       'id' => $this->t('ID'),
       'label' => $this->t('label'),
-      'bot_id' => $this->t('Bot'),
       'chat_id' => $this->t('Chat id'),
       'type_chat' => $this->t('Type chat'),
     ];
@@ -54,7 +72,6 @@ class TelegramChatListBuilder extends EntityListBuilder {
     $row = [
       'id' => $entity->id(),
       'label' => $entity->getLabel(),
-      'bot_id' => $entity->getBot()->id(),
       'chat_id' => $entity->getChatId(),
       'type_chat' => $entity->getTypeChat(),
     ];

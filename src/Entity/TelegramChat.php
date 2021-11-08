@@ -2,7 +2,6 @@
 
 namespace Drupal\drupal_telegram_sdk\Entity;
 
-use Drupal\Core\Annotation\PluralTranslation;
 use Drupal\Core\Entity\Annotation\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -15,14 +14,14 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   label_collection = @Translation("Telegram chats"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\drupal_telegram_skd\TelegramChatListBuilder",
+ *     "list_builder" = "Drupal\drupal_telegram_sdk\TelegramChatListBuilder",
  *     "form" = {
- *        "add" = "Drupal\Core\Entity\ContentEntityForm",
- *        "edit" = "Drupal\Core\Entity\ContentEntityForm",
+ *        "add" = "Drupal\drupal_telegram_sdk\Form\TelegramChatForm",
+ *        "edit" = "Drupal\drupal_telegram_sdk\Form\TelegramChatForm",
  *        "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *       "html" = "Drupal\drupal_telegram_sdk\Entity\Routing\TelegramChatRouteProvider",
  *     },
  *   },
  *   base_table = "telegram_chat",
@@ -33,14 +32,23 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "add-form" = "/admin/content/telegram-chat/add",
- *     "edit-form" = "/admin/{telegram_chat}/edit",
- *     "delete-form" = "/admin/{telegram_chat}/delete",
- *     "collection" = "/admin/content/telegram-chat",
+ *     "add-form" = "/admin/structure/{telegram_bot}/telegram-chats/add",
+ *     "edit-form" = "/admin/structure/{telegram_bot}/telegram-chats/{telegram_chat}/edit",
+ *     "delete-form" = "/admin/structure/{telegram_bot}/telegram-chats/{telegram_chat}/delete",
+ *     "collection" = "/admin/structure/{telegram_bot}/telegram-chats",
  *   },
  * )
  */
 class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function urlRouteParameters($rel) {
+    $uri_route_parameters = parent::urlRouteParameters($rel);
+    $uri_route_parameters['telegram_bot'] = $this->getBotId();
+    return $uri_route_parameters;
+  }
 
   /**
    * {@inheritDoc}
@@ -63,11 +71,7 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
       ->setRequired(TRUE)
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSetting('target_type', 'telegram_bot')
-      ->setDisplayOptions('form', [
-        'type' => 'options_select',
-        'weight' => 10
-      ])
-      ->setDisplayConfigurable('form', TRUE);
+      ->setDisplayConfigurable('form', FALSE);
 
     $fields['chat_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Chat ID'))
@@ -144,6 +148,13 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
     $this->set('bot', $bot);
 
     return $this;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getBotId() {
+    return $this->get('bot')->target_id;
   }
 
   /**
