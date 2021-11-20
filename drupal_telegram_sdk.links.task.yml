@@ -1,7 +1,7 @@
 entity.telegram_bot.view:
   route_name: entity.telegram_bot.edit_form
   base_route: entity.telegram_bot.edit_form
-  title: 'View bot'
+  title: 'Edit bot'
   weight: -1
 entity.telegram_chat.collection:
   route_name: entity.telegram_chat.collection

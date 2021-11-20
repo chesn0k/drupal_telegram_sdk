@@ -4,6 +4,7 @@ namespace Drupal\drupal_telegram_sdk;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a listing of telegram bots.
@@ -35,6 +36,23 @@ class TelegramBotListBuilder extends ConfigEntityListBuilder {
     ];
 
     return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    $operations['cats'] = [
+      'title' => $this->t('Chats'),
+      'weight' => 10,
+      'url' => Url::fromRoute('entity.telegram_chat.collection', ['telegram_bot' => $entity->id()]),
+    ];
+
+    unset($operations['delete']);
+
+    return $operations;
   }
 
 }
