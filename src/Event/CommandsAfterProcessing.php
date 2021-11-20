@@ -4,6 +4,9 @@ namespace Drupal\drupal_telegram_sdk\Event;
 
 use Drupal\Component\EventDispatcher\Event;
 
+/**
+ * Event after command execution.
+ */
 class CommandsAfterProcessing extends Event {
 
   /**

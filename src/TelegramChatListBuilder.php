@@ -9,6 +9,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Provides a listing of telegram chats.
+ */
 class TelegramChatListBuilder extends EntityListBuilder {
 
   /**

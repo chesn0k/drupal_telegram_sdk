@@ -5,6 +5,7 @@ namespace Drupal\drupal_telegram_sdk\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Annotation\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 
 /**
  * Defines the telegram bot entity type.
@@ -94,7 +95,11 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
       ->getTelegramBotApi($this->id);
 
     $string_url = $this->toUrl('webhook', ['absolute' => TRUE])->toString();
-    $telegram_api->setWebhook(['url' => $string_url]);
+    try {
+      $telegram_api->setWebhook(['url' => $string_url]);
+    } catch (TelegramSDKException $e) {
+      \Drupal::messenger()->addError($e->getMessage());
+    }
   }
 
   /**
