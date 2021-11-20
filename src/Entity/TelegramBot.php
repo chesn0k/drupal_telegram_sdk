@@ -100,6 +100,22 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
   /**
    * {@inheritDoc}
    */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+    $telegram_chat_storage = \Drupal::entityTypeManager()->getStorage('telegram_chat');
+
+    foreach ($entities as $entity) {
+      $chats = $telegram_chat_storage->loadByProperties([
+        'bot' => $entity->id(),
+      ]);
+
+      $telegram_chat_storage->delete($chats);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   protected function urlRouteParameters($rel) {
     $uri_route_parameters = parent::urlRouteParameters($rel);
 
