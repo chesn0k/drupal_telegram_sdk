@@ -58,7 +58,6 @@ class TelegramChatListBuilder extends EntityListBuilder {
     $header = [
       'id' => $this->t('ID'),
       'label' => $this->t('label'),
-      'chat_id' => $this->t('Chat id'),
       'type_chat' => $this->t('Type chat'),
     ];
 
@@ -72,7 +71,6 @@ class TelegramChatListBuilder extends EntityListBuilder {
     $row = [
       'id' => $entity->id(),
       'label' => $entity->getLabel(),
-      'chat_id' => $entity->getChatId(),
       'type_chat' => $entity->getTypeChat(),
     ];
 

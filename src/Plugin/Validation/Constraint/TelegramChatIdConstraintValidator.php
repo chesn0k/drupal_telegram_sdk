@@ -45,7 +45,7 @@ class TelegramChatIdConstraintValidator extends ConstraintValidator implements C
       $chat_id_exits = $this->entityStorage
         ->getQuery()
         ->condition('chat_id', $chat_id)
-        ->condition('bot', $chat->getBot()->id())
+        ->condition('bot', $chat->bundle())
         ->condition('id', (int) $chat->id(), '<>')
         ->range(0, 1)
         ->count()

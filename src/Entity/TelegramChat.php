@@ -4,6 +4,7 @@ namespace Drupal\drupal_telegram_sdk\Entity;
 
 use Drupal\Core\Entity\Annotation\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -28,6 +29,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   admin_permission = "access telegram_chat overview",
  *   entity_keys = {
  *     "id" = "id",
+ *     "bundle" = "bot",
  *     "label" = "label",
  *     "uuid" = "uuid"
  *   },
@@ -37,6 +39,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-form" = "/admin/structure/{telegram_bot}/telegram-chats/{telegram_chat}/delete",
  *     "collection" = "/admin/structure/{telegram_bot}/telegram-chats",
  *   },
+ *   bundle_entity_type = "telegram_bot",
+ *   field_ui_base_route="entity.telegram_bot.edit_form"
  * )
  */
 class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
@@ -46,7 +50,7 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
    */
   protected function urlRouteParameters($rel) {
     $uri_route_parameters = parent::urlRouteParameters($rel);
-    $uri_route_parameters['telegram_bot'] = $this->getBotId();
+    $uri_route_parameters['telegram_bot'] = $this->bundle();
     return $uri_route_parameters;
   }
 
@@ -65,13 +69,6 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
         'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE);
-
-    $fields['bot'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Telegram Bot'))
-      ->setRequired(TRUE)
-      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      ->setSetting('target_type', 'telegram_bot')
-      ->setDisplayConfigurable('form', FALSE);
 
     $fields['chat_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Chat ID'))
@@ -132,29 +129,6 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
     $this->set('chat_id', $chat_id);
 
     return $this;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getBot() {
-    return $this->get('bot')->entity;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function setBot(TelegramBot $bot) {
-    $this->set('bot', $bot);
-
-    return $this;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getBotId() {
-    return $this->get('bot')->target_id;
   }
 
   /**

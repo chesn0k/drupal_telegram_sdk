@@ -2,7 +2,7 @@
 
 namespace Drupal\drupal_telegram_sdk\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Annotation\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 
@@ -32,6 +32,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *    },
  *   },
  *   config_prefix = "telegram_bot",
+ *   bundle_of = "telegram_chat",
  *   admin_permission = "administer telegram_bot",
  *   links = {
  *     "collection" = "/admin/structure/telegram-bot",
@@ -49,10 +50,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "id",
  *     "label",
  *     "token"
- *   }
+ *   },
  * )
  */
-class TelegramBot extends ConfigEntityBase implements TelegramBotInterface {
+class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface {
 
   /**
    * The telegram bot ID.

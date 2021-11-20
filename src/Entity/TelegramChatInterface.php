@@ -43,32 +43,6 @@ interface TelegramChatInterface extends ContentEntityInterface {
   public function setChatId(int $chat_id);
 
   /**
-   * Gets bot telegram chat.
-   *
-   * @return \Drupal\drupal_telegram_sdk\Entity\TelegramBot
-   *   The bot telegram chat object.
-   */
-  public function getBot();
-
-  /**
-   * Sets bot telegram chat.
-   *
-   * @param \Drupal\drupal_telegram_sdk\Entity\TelegramBot $bot
-   *   The bot telegram chat object.
-   *
-   * @return $this
-   */
-  public function setBot(TelegramBot $bot);
-
-  /**
-   * Gets telegram bot id.
-   *
-   * @return mixed
-   *  The telegram bot id
-   */
-  public function getBotId();
-
-  /**
    * Gets type telegram chat.
    *
    * @return string
