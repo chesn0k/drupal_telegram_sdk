@@ -64,7 +64,7 @@ class TelegramBotController implements ContainerInjectionInterface {
 
     /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot */
     $telegram_bot = reset($telegram_bots);
-    $telegram_api = $this->telegramBotApi->getTelegramBotApi($telegram_bot->id());
+    $telegram_api = $this->telegramBotApi->registerCommands($telegram_bot->id());
     $update = $telegram_api->commandsHandler(TRUE);
 
     $event = new CommandsAfterProcessing($update, $telegram_api);

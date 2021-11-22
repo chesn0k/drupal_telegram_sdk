@@ -6,6 +6,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager;
 use Telegram\Bot\Api;
 
+/**
+ * Telegram Bot API Service.
+ */
 class TelegramBotApi {
 
   /**
@@ -23,6 +26,8 @@ class TelegramBotApi {
   protected $telegramCommandManager;
 
   /**
+   * Constructs a TelegramBotApi object.
+   *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
@@ -38,16 +43,33 @@ class TelegramBotApi {
    *  The id telegram bot.
    *
    * @return \Telegram\Bot\Api
+   *  Telegram SDK Api.
    */
-  public function getTelegramBotApi(string $id) {
+  public function getApi(string $id) {
     /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot */
     $telegram_bot = $this->entityTypeManager->getStorage('telegram_bot')
       ->load($id);
     $telegram_api = new Api($telegram_bot->getToken());
 
+    return $telegram_api;
+  }
+
+  /**
+   * Collects and registers commands. You must use this method of getting the
+   *  API if you want to execute the command.
+   *
+   * @param string $id
+   *  The id telegram bot.
+   *
+   * @return \Telegram\Bot\Api
+   *  Telegram SDK Api.
+   */
+  public function registerCommands(string $id) {
+    $telegram_api = $this->getApi($id);
+
     $plugin_definitions = $this->telegramCommandManager->getDefinitions();
     foreach ($plugin_definitions as $plugin_id => $definition) {
-      if (empty($definition['bots_id']) || in_array($telegram_bot->id(), $definition['bots_id'])) {
+      if (empty($definition['bots_id']) || in_array($id, $definition['bots_id'])) {
         $command = $this->telegramCommandManager->createInstance($plugin_id, $definition);
         $telegram_api->addCommand($command);
       }
