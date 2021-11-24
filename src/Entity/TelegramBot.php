@@ -97,7 +97,7 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
     $string_url = $this->toUrl('webhook', [
       'absolute' => TRUE,
       'https' => TRUE,
-      'prefix' => '',
+      'language' => $this->languageManager()->getDefaultLanguage(),
     ])->toString();
 
     try {

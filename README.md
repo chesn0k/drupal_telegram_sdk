@@ -64,9 +64,8 @@ $bot_api->sendMessage([
 ```
 Build and run commands.
 ```php
-/** @var \Telegram\Bot\Api $bot_api */
-$bot_api = \Drupal::service('drupal_telegram_sdk.bot_api')->registerCommands('drupal_bot');
-$bot_api->->commandsHandler(TRUE)
+/** @var \Telegram\Bot\Objects\Update $update */
+$update = \Drupal::service('drupal_telegram_sdk.bot_api')->commandsHandler('drupal_bot');
 ```
 
 Plugin command annotation example.

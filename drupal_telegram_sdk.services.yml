@@ -5,4 +5,4 @@ services:
 
   drupal_telegram_sdk.bot_api:
     class: Drupal\drupal_telegram_sdk\TelegramBotApi
-    arguments: ['@entity_type.manager', '@plugin.manager.telegram_command']
+    arguments: ['@entity_type.manager', '@plugin.manager.telegram_command', '@event_dispatcher']
