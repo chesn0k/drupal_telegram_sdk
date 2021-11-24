@@ -101,7 +101,7 @@ class TelegramBotApi {
    *   The id telegram bot.
    *
    * @return \Telegram\Bot\Objects\Update
-   *   Update object
+   *   Update object.
    */
   public function commandsHandler(string $id) {
     $telegram_api = $this->registerCommands($id);

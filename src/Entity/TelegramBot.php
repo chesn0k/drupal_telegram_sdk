@@ -94,11 +94,7 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
     $telegram_api = \Drupal::service('drupal_telegram_sdk.bot_api')
       ->registerCommands($this->id);
 
-    $string_url = $this->toUrl('webhook', [
-      'absolute' => TRUE,
-      'https' => TRUE,
-      'language' => $this->languageManager()->getDefaultLanguage(),
-    ])->toString();
+    $string_url = $this->toUrl('webhook', ['absolute' => TRUE])->toString();
 
     try {
       $telegram_api->setWebhook(['url' => $string_url]);
@@ -121,6 +117,18 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
 
       $telegram_chat_storage->delete($chats);
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function toUrl($rel = 'edit-form', array $options = []) {
+    if ($rel = 'webhook') {
+      $options['https'] = TRUE;
+      $options += ['language' => $this->languageManager()->getDefaultLanguage()];
+    }
+
+    return parent::toUrl($rel, $options);
   }
 
   /**
