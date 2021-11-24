@@ -8,6 +8,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
+ * Defines the telegram chat entity type.
+ *
  * @ContentEntityType(
  *   id = "telegram_chat",
  *   label = @Translation("Telegram chat"),

@@ -30,6 +30,8 @@ class TelegramBotApi {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager $telegram_command_manager
+   *   The telegram command plugin manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, TelegramCommandPluginManager $telegram_command_manager) {
     $this->entityTypeManager = $entity_type_manager;
@@ -40,10 +42,10 @@ class TelegramBotApi {
    * Gets telegram bot api.
    *
    * @param string $id
-   *  The id telegram bot.
+   *   The id telegram bot.
    *
    * @return \Telegram\Bot\Api
-   *  Telegram SDK Api.
+   *   Telegram SDK Api.
    */
   public function getApi(string $id) {
     /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot */
@@ -59,10 +61,10 @@ class TelegramBotApi {
    *  API if you want to execute the command.
    *
    * @param string $id
-   *  The id telegram bot.
+   *   The id telegram bot.
    *
    * @return \Telegram\Bot\Api
-   *  Telegram SDK Api.
+   *   Telegram SDK Api.
    */
   public function registerCommands(string $id) {
     $telegram_api = $this->getApi($id);

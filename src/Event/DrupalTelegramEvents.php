@@ -16,4 +16,13 @@ final class DrupalTelegramEvents {
    */
   const COMMANDS_AFTER_PROCESSING = 'drupal_telegram_sdk.commands.after_processing';
 
+  /**
+   * Name of the event fired before command execution.
+   *
+   * @Event
+   *
+   * @see \Drupal\drupal_telegram_sdk\Event\CommandsBeforeProcessing
+   */
+  const COMMANDS_BEFORE_PROCESSING = 'drupal_telegram_sdk.commands.before_processing';
+
 }

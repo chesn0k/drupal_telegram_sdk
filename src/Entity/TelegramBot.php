@@ -94,7 +94,12 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
     $telegram_api = \Drupal::service('drupal_telegram_sdk.bot_api')
       ->registerCommands($this->id);
 
-    $string_url = $this->toUrl('webhook', ['absolute' => TRUE])->toString();
+    $string_url = $this->toUrl('webhook', [
+      'absolute' => TRUE,
+      'https' => TRUE,
+      'prefix' => '',
+    ])->toString();
+
     try {
       $telegram_api->setWebhook(['url' => $string_url]);
     } catch (TelegramSDKException $e) {

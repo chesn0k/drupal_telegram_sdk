@@ -9,7 +9,7 @@ CONTENTS OF THIS FILE
 INTRODUCTION
 ------------
 
-This module integrates [Telegram Bot SDK]('https://github.com/irazasyed/telegram-bot-sdk') for Drupal.
+This module integrates [Telegram Bot SDK](https://github.com/irazasyed/telegram-bot-sdk) for Drupal.
 
 ### Features
 
@@ -29,7 +29,7 @@ REQUIREMENTS
 
 This module requires the following dependencies:
 
-- [Telegram Bot SDK]('https://github.com/irazasyed/telegram-bot-sdk').
+- [Telegram Bot SDK](https://github.com/irazasyed/telegram-bot-sdk).
 
 INSTALLATION
 ------------
@@ -39,7 +39,7 @@ information.
 CONFIGURATION
 -------------
 
-Visit the [official documentation]('https://telegram-bot-sdk.readme.io/docs') before using.
+Visit the [official documentation](https://telegram-bot-sdk.readme.io/docs) before using.
 
 1. Add and save bot `/admin/structure/telegram-bot/add`.
 2. Add commands (run `drush gen telegram-command`).
@@ -49,14 +49,14 @@ Your site must support HTTPS.
 
 ### API
 
-Contact the API through the `drupal_telegram_sdk.bot_api` service.
+Get the API through the `drupal_telegram_sdk.bot_api` service.
 
 Some code examples:
 
 Send a message.
 ```php
 /** @var \Telegram\Bot\Api $bot_api */
-$bot_api = \Drupal::service('drupal_telegram_sdk.bot_api')->getApi($bot_id);
+$bot_api = \Drupal::service('drupal_telegram_sdk.bot_api')->getApi('drupal_bot');
 $bot_api->sendMessage([
   'chat_id' => 100000,
   'text' => 'Hello world!',
@@ -65,7 +65,7 @@ $bot_api->sendMessage([
 Build and run commands.
 ```php
 /** @var \Telegram\Bot\Api $bot_api */
-$bot_api = \Drupal::service('drupal_telegram_sdk.bot_api')->registerCommands($bot_id);
+$bot_api = \Drupal::service('drupal_telegram_sdk.bot_api')->registerCommands('drupal_bot');
 $bot_api->->commandsHandler(TRUE)
 ```
 
