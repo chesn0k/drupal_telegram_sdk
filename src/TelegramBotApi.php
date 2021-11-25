@@ -37,6 +37,13 @@ class TelegramBotApi {
   protected $eventDispatcher;
 
   /**
+   * The telegram bot.
+   *
+   * @var NULL|\Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface
+   */
+  private $telegramBot = NULL;
+
+  /**
    * Constructs a TelegramBotApi object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -62,10 +69,10 @@ class TelegramBotApi {
    *   Telegram SDK Api.
    */
   public function getApi(string $id) {
-    /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot */
-    $telegram_bot = $this->entityTypeManager->getStorage('telegram_bot')
+    $this->telegramBot = $this->entityTypeManager->getStorage('telegram_bot')
       ->load($id);
-    $telegram_api = new Api($telegram_bot->getToken());
+
+    $telegram_api = new Api($this->telegramBot->getToken());
 
     return $telegram_api;
   }
@@ -106,12 +113,12 @@ class TelegramBotApi {
   public function commandsHandler(string $id) {
     $telegram_api = $this->registerCommands($id);
 
-    $event_before = new CommandsBeforeProcessing($telegram_api);
+    $event_before = new CommandsBeforeProcessing($telegram_api, $this->telegramBot);
     $this->eventDispatcher->dispatch(DrupalTelegramEvents::COMMANDS_BEFORE_PROCESSING, $event_before);
 
     $update = $telegram_api->commandsHandler(TRUE);
 
-    $event_after = new CommandsAfterProcessing($update, $telegram_api);
+    $event_after = new CommandsAfterProcessing($update, $telegram_api, $this->telegramBot);
     $this->eventDispatcher->dispatch(DrupalTelegramEvents::COMMANDS_AFTER_PROCESSING, $event_after);
 
     return $update;

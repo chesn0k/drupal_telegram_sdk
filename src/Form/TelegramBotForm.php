@@ -23,25 +23,28 @@ class TelegramBotForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
-      '#default_value' => $this->entity->label(),
+      '#default_value' => $this->getEntity()->label(),
       '#description' => $this->t('Label for the telegram bot.'),
       '#required' => TRUE,
     ];
 
     $form['id'] = [
       '#type' => 'machine_name',
-      '#default_value' => $this->entity->id(),
+      '#default_value' => $this->getEntity()->id(),
       '#machine_name' => [
         'exists' => '\Drupal\drupal_telegram_sdk\Entity\TelegramBot::load',
       ],
-      '#disabled' => !$this->entity->isNew(),
+      '#disabled' => !$this->getEntity()->isNew(),
     ];
 
     $form['token'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Token'),
-      '#default_value' => $this->entity->get('token'),
+      '#default_value' => $this->getEntity()->get('token'),
       '#description' => $this->t('Bot token.'),
+      '#attributes' => [
+        'autocomplete' => 'off',
+      ],
       '#required' => TRUE,
     ];
 
