@@ -123,7 +123,7 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
    * {@inheritDoc}
    */
   public function toUrl($rel = 'edit-form', array $options = []) {
-    if ($rel = 'webhook') {
+    if ($rel === 'webhook') {
       $options['https'] = TRUE;
       $options += ['language' => $this->languageManager()->getDefaultLanguage()];
     }
