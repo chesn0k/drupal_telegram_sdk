@@ -7,12 +7,12 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * TelegramCommand plugin manager.
+ * Telegram plugin manager.
  */
-class TelegramCommandPluginManager extends DefaultPluginManager {
+class TelegramPluginManager extends DefaultPluginManager {
 
   /**
-   * Constructs TelegramCommandPluginManager object.
+   * Constructs TelegramPluginManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -24,10 +24,10 @@ class TelegramCommandPluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct(
-      'Plugin/TelegramCommand',
+      'Plugin/telegram/TelegramCommand',
       $namespaces,
       $module_handler,
-      'Drupal\drupal_telegram_sdk\Plugin\TelegramCommand\TelegramCommandInterface',
+      'Drupal\drupal_telegram_sdk\Plugin\telegram\TelegramCommand\TelegramCommandInterface',
       'Drupal\drupal_telegram_sdk\Annotation\TelegramCommand'
     );
     $this->alterInfo('telegram_command_info');

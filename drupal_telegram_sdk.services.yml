@@ -1,8 +1,8 @@
 services:
-  plugin.manager.telegram_command:
-    class: Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager
+  plugin.manager.telegram:
+    class: Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager
     parent: default_plugin_manager
 
   drupal_telegram_sdk.bot_api:
     class: Drupal\drupal_telegram_sdk\TelegramBotApi
-    arguments: ['@entity_type.manager', '@plugin.manager.telegram_command', '@event_dispatcher']
+    arguments: ['@entity_type.manager', '@plugin.manager.telegram', '@event_dispatcher']

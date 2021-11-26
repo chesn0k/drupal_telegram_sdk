@@ -3,9 +3,6 @@
 namespace Drupal\drupal_telegram_sdk\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\drupal_telegram_sdk\Event\CommandsAfterProcessing;
-use Drupal\drupal_telegram_sdk\Event\CommandsBeforeProcessing;
-use Drupal\drupal_telegram_sdk\Event\DrupalTelegramEvents;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

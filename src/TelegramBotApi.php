@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\drupal_telegram_sdk\Event\CommandsAfterProcessing;
 use Drupal\drupal_telegram_sdk\Event\CommandsBeforeProcessing;
 use Drupal\drupal_telegram_sdk\Event\DrupalTelegramEvents;
-use Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager;
+use Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Telegram\Bot\Api;
 
@@ -23,9 +23,9 @@ class TelegramBotApi {
   protected $entityTypeManager;
 
   /**
-   * The telegram command manager.
+   * The telegram manager.
    *
-   * @var \Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager
+   * @var \Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager
    */
   protected $telegramCommandManager;
 
@@ -48,12 +48,12 @@ class TelegramBotApi {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager $telegram_command_manager
-   *   The telegram command plugin manager.
+   * @param \Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager $telegram_command_manager
+   *   The telegram plugin manager.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TelegramCommandPluginManager $telegram_command_manager, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TelegramPluginManager $telegram_command_manager, EventDispatcherInterface $event_dispatcher) {
     $this->entityTypeManager = $entity_type_manager;
     $this->telegramCommandManager = $telegram_command_manager;
     $this->eventDispatcher = $event_dispatcher;

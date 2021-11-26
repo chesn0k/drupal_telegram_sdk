@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\drupal_telegram_sdk\Plugin\TelegramCommand;
+namespace Drupal\drupal_telegram_sdk\Plugin\telegram\TelegramCommand;
 
 /**
  * Interface for telegram_command plugins.
