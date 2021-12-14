@@ -37,11 +37,18 @@ class TelegramBotApi {
   protected $eventDispatcher;
 
   /**
+   * The telegram api.
+   *
+   * @var \Telegram\bot\Api|NULL
+   */
+  protected $telegram;
+
+  /**
    * The telegram bot.
    *
-   * @var NULL|\Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface
+   * @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface|NULL
    */
-  private $telegramBot = NULL;
+  private $telegramBot;
 
   /**
    * Constructs a TelegramBotApi object.
@@ -60,68 +67,60 @@ class TelegramBotApi {
   }
 
   /**
-   * Gets telegram bot api.
+   * Set telegram bot api.
    *
    * @param string $id
-   *   The id telegram bot.
+   *   The telegram bot id.
    *
-   * @return \Telegram\Bot\Api
-   *   Telegram SDK Api.
+   * @return \Drupal\drupal_telegram_sdk\TelegramBotApi
    */
-  public function getApi(string $id) {
+  public function setTelegrma(string $id) {
     $this->telegramBot = $this->entityTypeManager->getStorage('telegram_bot')
       ->load($id);
 
-    $telegram_api = new Api($this->telegramBot->getToken());
+    $this->telegram = new Api($this->telegramBot->getToken());
 
-    return $telegram_api;
+    return $this;
+  }
+
+  /**
+   * Gets telegram bot api.
+   *
+   * @return \Telegram\Bot\Api|NULL
+   *   Telegram SDK Api.
+   */
+  public function getTelegrma() {
+    return $this->telegram;
   }
 
   /**
    * Collects and registers commands. You must use this method of getting the
    *  API if you want to execute the command.
    *
-   * @param string $id
-   *   The id telegram bot.
-   *
-   * @return \Telegram\Bot\Api
-   *   Telegram SDK Api.
+   * @return \Drupal\drupal_telegram_sdk\TelegramBotApi
    */
-  public function registerCommands(string $id) {
-    $telegram_api = $this->getApi($id);
-
+  public function registerCommands() {
     $plugin_definitions = $this->telegramCommandManager->getDefinitions();
     foreach ($plugin_definitions as $plugin_id => $definition) {
-      if (empty($definition['bots_id']) || in_array($id, $definition['bots_id'])) {
+      if (empty($definition['bots_id']) || in_array($this->telegramBot->id(), $definition['bots_id'])) {
         $command = $this->telegramCommandManager->createInstance($plugin_id, $definition);
-        $telegram_api->addCommand($command);
+        $this->telegram->addCommand($command);
       }
     }
 
-    return $telegram_api;
+    return $this;
   }
 
   /**
    * Process Inbound сommands.
    *
-   * @param string $id
-   *   The id telegram bot.
-   *
    * @return \Telegram\Bot\Objects\Update
    *   Update object.
    */
-  public function commandsHandler(string $id) {
-    $telegram_api = $this->registerCommands($id);
+  public function commandsHandler() {
+    $this->registerCommands();
 
-    $event_before = new CommandsBeforeProcessing($telegram_api, $this->telegramBot);
-    $this->eventDispatcher->dispatch(DrupalTelegramEvents::COMMANDS_BEFORE_PROCESSING, $event_before);
-
-    $update = $telegram_api->commandsHandler(TRUE);
-
-    $event_after = new CommandsAfterProcessing($update, $telegram_api, $this->telegramBot);
-    $this->eventDispatcher->dispatch(DrupalTelegramEvents::COMMANDS_AFTER_PROCESSING, $event_after);
-
-    return $update;
+    return $this->telegram->commandsHandler(TRUE);
   }
 
 }
