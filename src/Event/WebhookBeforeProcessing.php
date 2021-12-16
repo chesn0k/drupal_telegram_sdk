@@ -26,6 +26,13 @@ class WebhookBeforeProcessing extends Event {
   protected $telegram;
 
   /**
+   * TRUE, if processing is stopped. Default FALSE.
+   *
+   * @var bool
+   */
+  protected $lockProcessing = FALSE;
+
+  /**
    * The construct WebhookBeforeProcessing object.
    *
    * @param \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot
@@ -56,6 +63,37 @@ class WebhookBeforeProcessing extends Event {
    */
   public function getTelegram() {
     return $this->telegram;
+  }
+
+  /**
+   * Locked processing.
+   *
+   * @return $this
+   */
+  public function lockingProcessing() {
+    $this->lockProcessing = TRUE;
+
+    return $this;
+  }
+
+  /**
+   * Unlock processing.
+   *
+   * @return $this
+   */
+  public function unlockProcessing() {
+    $this->lockProcessing = FALSE;
+
+    return $this;
+  }
+
+  /**
+   * TRUE if processing locked.
+   *
+   * @return bool
+   */
+  public function isLockProcessing() {
+    return $this->lockProcessing;
   }
 
 }

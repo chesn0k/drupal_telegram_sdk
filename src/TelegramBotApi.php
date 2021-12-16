@@ -3,11 +3,7 @@
 namespace Drupal\drupal_telegram_sdk;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\drupal_telegram_sdk\Event\CommandsAfterProcessing;
-use Drupal\drupal_telegram_sdk\Event\CommandsBeforeProcessing;
-use Drupal\drupal_telegram_sdk\Event\DrupalTelegramEvents;
 use Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Telegram\Bot\Api;
 
 /**
@@ -30,13 +26,6 @@ class TelegramBotApi {
   protected $telegramCommandManager;
 
   /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * The telegram api.
    *
    * @var \Telegram\bot\Api|NULL
@@ -57,13 +46,10 @@ class TelegramBotApi {
    *   The entity type manager.
    * @param \Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager $telegram_command_manager
    *   The telegram plugin manager.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TelegramPluginManager $telegram_command_manager, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TelegramPluginManager $telegram_command_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->telegramCommandManager = $telegram_command_manager;
-    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -74,7 +60,7 @@ class TelegramBotApi {
    *
    * @return \Drupal\drupal_telegram_sdk\TelegramBotApi
    */
-  public function setTelegrma(string $id) {
+  public function setTelegram(string $id) {
     $this->telegramBot = $this->entityTypeManager->getStorage('telegram_bot')
       ->load($id);
 
@@ -89,7 +75,7 @@ class TelegramBotApi {
    * @return \Telegram\Bot\Api|NULL
    *   Telegram SDK Api.
    */
-  public function getTelegrma() {
+  public function getTelegram() {
     return $this->telegram;
   }
 
