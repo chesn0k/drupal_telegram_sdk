@@ -27,7 +27,7 @@ interface TelegramChatInterface extends ContentEntityInterface {
   /**
    * Gets the telegram chat chat_id.
    *
-   * @return int
+   * @return string
    *  The telegram chat chat_id.
    */
   public function getChatId();
@@ -35,12 +35,12 @@ interface TelegramChatInterface extends ContentEntityInterface {
   /**
    * Sets the telegram chat_id.
    *
-   * @param int $chat_id
+   * @param string $chat_id
    *   The telegram chat chat_id.
    *
    * @return $this
    */
-  public function setChatId(int $chat_id);
+  public function setChatId(string $chat_id);
 
   /**
    * Gets type telegram chat.

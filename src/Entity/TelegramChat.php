@@ -71,13 +71,13 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['chat_id'] = BaseFieldDefinition::create('integer')
+    $fields['chat_id'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Chat ID'))
       ->setRequired(TRUE)
+      ->setSetting('max_length', 255)
       ->addConstraint('TelegramChatId')
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'number',
+        'type' => 'string_textfield',
         'weight' => 20,
       ])
       ->setDisplayConfigurable('form', TRUE);
@@ -126,7 +126,7 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
   /**
    * {@inheritDoc}
    */
-  public function setChatId(int $chat_id) {
+  public function setChatId(string $chat_id) {
     $this->set('chat_id', $chat_id);
 
     return $this;
