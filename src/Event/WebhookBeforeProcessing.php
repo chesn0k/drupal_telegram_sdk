@@ -13,24 +13,18 @@ class WebhookBeforeProcessing extends Event {
 
   /**
    * The telegram bot.
-   *
-   * @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface
    */
-  protected $telegramBot;
+  protected TelegramBotInterface $telegramBot;
 
   /**
    * The telegram api.
-   *
-   * @var \Telegram\Bot\Api
    */
-  protected $telegram;
+  protected Api $telegram;
 
   /**
    * TRUE, if processing is stopped. Default FALSE.
-   *
-   * @var bool
    */
-  protected $lockProcessing = FALSE;
+  protected bool $lockProcessing = FALSE;
 
   /**
    * The construct WebhookBeforeProcessing object.
@@ -51,7 +45,7 @@ class WebhookBeforeProcessing extends Event {
    * @return \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface
    *   The telegram bot.
    */
-  public function getTelegramBot() {
+  public function getTelegramBot(): TelegramBotInterface {
     return $this->telegramBot;
   }
 
@@ -61,7 +55,7 @@ class WebhookBeforeProcessing extends Event {
    * @return \Telegram\Bot\Api
    *   The telegram bot api.
    */
-  public function getTelegram() {
+  public function getTelegram(): Api {
     return $this->telegram;
   }
 
@@ -70,7 +64,7 @@ class WebhookBeforeProcessing extends Event {
    *
    * @return $this
    */
-  public function lockingProcessing() {
+  public function lockingProcessing(): WebhookBeforeProcessing {
     $this->lockProcessing = TRUE;
 
     return $this;
@@ -81,7 +75,7 @@ class WebhookBeforeProcessing extends Event {
    *
    * @return $this
    */
-  public function unlockProcessing() {
+  public function unlockProcessing(): WebhookBeforeProcessing {
     $this->lockProcessing = FALSE;
 
     return $this;
@@ -92,7 +86,7 @@ class WebhookBeforeProcessing extends Event {
    *
    * @return bool
    */
-  public function isLockProcessing() {
+  public function isLockProcessing(): bool {
     return $this->lockProcessing;
   }
 

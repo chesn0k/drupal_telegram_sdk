@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\drupal_telegram_sdk\Plugin\telegram\TelegramCommand;
+namespace Drupal\drupal_telegram_sdk\Plugin\telegram\TelegramCallback;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -11,9 +11,9 @@ use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
 /**
- * Base class for telegram_command plugins.
+ * Base class for telegram_callback plugins.
  */
-abstract class TelegramCommandPluginBase extends PluginBase implements TelegramPluginInterface {
+abstract class TelegramCallbackPluginBase extends PluginBase implements TelegramPluginInterface {
 
   use Answerable;
   use StringTranslationTrait;
@@ -24,14 +24,9 @@ abstract class TelegramCommandPluginBase extends PluginBase implements TelegramP
   protected TelegramBot $bot;
 
   /**
-   * The argument's command array.
+   * The argument's array.
    */
   protected array $arguments = [];
-
-  /**
-   * The entity being processed.
-   */
-  protected array $entity = [];
 
   /**
    * {@inheritDoc}
@@ -40,29 +35,32 @@ abstract class TelegramCommandPluginBase extends PluginBase implements TelegramP
     $this->bot = $bot;
     $this->telegram = $telegram;
     $this->update = $update;
-    $this->entity = $entity;
     $this->arguments = $this->getArguments();
 
     $this->handle();
   }
 
   /**
-   * Handle telegram command.
+   * Handle callback query.
    */
   abstract public function handle(): void;
 
   /**
    * Parse arguments.
+   *
+   * @return array
+   *   Arguments.
    */
   protected function getArguments(): array {
 
     if (!empty($this->getPluginDefinition()['pattern'])) {
+      $data = $this->getUpdate()->callbackQuery->data;
+
       $required = $this->extractVariableNames('/\{([^\d]\w+?)\}/');
       $optional = $this->extractVariableNames('/\{([^\d]\w+?)\?\}/');
       $regex = $this->prepareRegex($required, $optional);
-      $text = $this->relevantMessageSubString();
+      preg_match($regex, $data, $matches);
 
-      preg_match($regex, $text, $matches);
       return $matches;
     }
 
@@ -95,47 +93,15 @@ abstract class TelegramCommandPluginBase extends PluginBase implements TelegramP
    * @return string
    *   The regex.
    */
-  protected function prepareRegex(array $required, array $optional): string {
-    $bot_name = '(?:@.+?bot)?\s+?';
+  private function prepareRegex(array $required, array $optional): string {
 
-    $required = array_map(static fn($var) => "(?P<$var>[^ ]++)", $required);
-    $required = implode('\s+?', $required);
+    $required = \array_map(static fn($var) => "(?P<$var>[^ ]++)", $required);
+    $required = \implode('\s+?', $required);
 
-    $optional = array_map(static fn($var) => "(?:\s+?(?P<$var>[^ ]++))?", $optional);
-    $optional = implode('\s+?', $optional);
+    $optional = \array_map(static fn($var) => "(?:\s+?(?P<$var>[^ ]++))?", $optional);
+    $optional = \implode('\s+?', $optional);
 
-    return "%/{$this->getPluginDefinition()['name']}{$bot_name}{$required}{$optional}%si";
-  }
-
-  /**
-   * Get relevant message substring.
-   *
-   * @return string
-   *   The relevant message substring.
-   */
-  protected function relevantMessageSubString(): string {
-    $message = $this->getUpdate()->getMessage()->toArray();
-    $text = $this->getUpdate()->getMessage()->text;
-
-    $commands = array_filter(
-      $message['entities'],
-      static fn($entity) => $entity['type'] === 'bot_command'
-    );
-
-    $offsets = array_map(static fn($command) => $command['offset'], $commands);
-
-    if (empty($offsets)) {
-      return $text;
-    }
-
-    $current_offset = array_search($this->entity['offset'], $offsets);
-    $splice = array_splice(
-      $offsets,
-      $current_offset,
-      2
-    );
-
-    return count($splice) === 2 ? substr($text, $splice[0], $splice[1]) : substr($text, $splice[0]);
+    return "%/{$this->getPluginDefinition()['name']}\s+?{$required}{$optional}%si";
   }
 
 }

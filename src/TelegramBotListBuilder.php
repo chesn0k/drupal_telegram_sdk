@@ -14,7 +14,7 @@ class TelegramBotListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildHeader() {
+  public function buildHeader(): array {
     $header = [
       'label' => $this->t('Label'),
       'id' => $this->t('Machine name'),
@@ -27,7 +27,7 @@ class TelegramBotListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildRow(EntityInterface $entity) {
+  public function buildRow(EntityInterface $entity): array {
     /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $entity */
     $row = [
       'label' => $entity->label(),
@@ -41,7 +41,7 @@ class TelegramBotListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritDoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
+  public function getDefaultOperations(EntityInterface $entity): array {
     $operations = parent::getDefaultOperations($entity);
 
     $operations['cats'] = [

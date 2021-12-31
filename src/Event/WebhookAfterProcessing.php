@@ -14,24 +14,18 @@ class WebhookAfterProcessing extends Event {
 
   /**
    * The telegram bot.
-   *
-   * @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface
    */
-  protected $telegramBot;
+  protected TelegramBotInterface $telegramBot;
 
   /**
    * The telegram api.
-   *
-   * @var \Telegram\Bot\Api
    */
-  protected $telegram;
+  protected Api $telegram;
 
   /**
-   * The update.
-   *
-   * @var \Telegram\Bot\Objects\Update
+   * The update object.
    */
-  protected $update;
+  protected Update $update;
 
   /**
    * The construct WebhookAfterProcessing object.
@@ -55,7 +49,7 @@ class WebhookAfterProcessing extends Event {
    * @return \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface
    *   The telegram bot.
    */
-  public function getTelegramBot() {
+  public function getTelegramBot(): TelegramBotInterface{
     return $this->telegramBot;
   }
 
@@ -65,7 +59,7 @@ class WebhookAfterProcessing extends Event {
    * @return \Telegram\Bot\Api
    *   The telegram bot api.
    */
-  public function getTelegram() {
+  public function getTelegram(): Api {
     return $this->telegram;
   }
 
@@ -75,7 +69,7 @@ class WebhookAfterProcessing extends Event {
    * @return \Telegram\Bot\Objects\Update
    *   The update.
    */
-  public function getUpdate() {
+  public function getUpdate(): Update {
     return $this->update;
   }
 

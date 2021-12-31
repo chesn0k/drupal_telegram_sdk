@@ -103,14 +103,14 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
   /**
    * {@inheritDoc}
    */
-  public function getLabel() {
+  public function getLabel(): string {
     return $this->get('label')->value;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setLabel(string $label) {
+  public function setLabel(string $label): TelegramChatInterface {
     $this->set('label', $label);
 
     return $this;
@@ -119,14 +119,14 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
   /**
    * {@inheritDoc}
    */
-  public function getChatId() {
+  public function getChatId(): string {
     return $this->get('chat_id')->value;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setChatId(string $chat_id) {
+  public function setChatId(string $chat_id): TelegramChatInterface {
     $this->set('chat_id', $chat_id);
 
     return $this;
@@ -135,16 +135,16 @@ class TelegramChat extends ContentEntityBase implements TelegramChatInterface {
   /**
    * {@inheritDoc}
    */
-  public function getTypeChat() {
+  public function getTypeChat(): string {
     return $this->get('type_chat')->value;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setTypeChat(string $chat_type) {
+  public function setTypeChat(string $chat_type): TelegramChatInterface {
     $this->set('type_chat', $chat_type);
 
-    return $chat_type;
+    return $this;
   }
 }

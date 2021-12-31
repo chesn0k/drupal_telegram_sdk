@@ -14,7 +14,7 @@ class TelegramChatForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
+  public function save(array $form, FormStateInterface $form_state): void {
     parent::save($form, $form_state);
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }

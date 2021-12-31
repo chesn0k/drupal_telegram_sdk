@@ -1,8 +1,29 @@
 services:
-  plugin.manager.telegram:
+  plugin.manager.telegram.command:
     class: Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager
-    parent: default_plugin_manager
+    arguments: ['telegram_command', '@container.namespaces', '@cache.discovery', '@module_handler']
+
+  plugin.manager.telegram.callback:
+    class: Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager
+    arguments: ['telegram_callback', '@container.namespaces', '@cache.discovery', '@module_handler']
 
   drupal_telegram_sdk.bot_api:
     class: Drupal\drupal_telegram_sdk\TelegramBotApi
-    arguments: ['@entity_type.manager', '@plugin.manager.telegram', '@event_dispatcher']
+    arguments: ['@entity_type.manager', '@drupal_telegram_sdk.processor_manager']
+
+  drupal_telegram_sdk.processor_manager:
+    class: Drupal\drupal_telegram_sdk\TelegramProcessorManager
+    tags:
+      - { name: service_collector, tag: telegram_processor, call: addProcessor }
+
+  drupal_telegram_sdk.command_processor:
+    class: Drupal\drupal_telegram_sdk\TelegramProcessor\TelegramCommandProcessor
+    arguments: ['@plugin.manager.telegram.command']
+    tags:
+      - { name: telegram_processor, priority: 100 }
+
+  drupal_telegram_sdk.callback_processor:
+    class: Drupal\drupal_telegram_sdk\TelegramProcessor\TelegramCallbackProcessor
+    arguments: [ '@plugin.manager.telegram.callback' ]
+    tags:
+      - { name: telegram_processor, priority: 200 }

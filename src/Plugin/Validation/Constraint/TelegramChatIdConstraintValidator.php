@@ -3,6 +3,7 @@
 namespace Drupal\drupal_telegram_sdk\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -14,16 +15,14 @@ class TelegramChatIdConstraintValidator extends ConstraintValidator implements C
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $entityStorage;
+  protected EntityStorageInterface $entityStorage;
 
   /**
    * {@inheritDoc}
    */
-  public static function create(ContainerInterface $container) {
-    $instance = new static();
+  public static function create(ContainerInterface $container): self {
+    $instance = new self();
     $instance->entityStorage = $container->get('entity_type.manager')
       ->getStorage('telegram_chat');
 
@@ -33,7 +32,7 @@ class TelegramChatIdConstraintValidator extends ConstraintValidator implements C
   /**
    * {@inheritDoc}
    */
-  public function validate($items, Constraint $constraint) {
+  public function validate($items, Constraint $constraint): void {
     if (!$items = $items->first()) {
       return;
     }
