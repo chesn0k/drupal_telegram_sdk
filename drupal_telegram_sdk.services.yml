@@ -9,7 +9,7 @@ services:
 
   drupal_telegram_sdk.bot_api:
     class: Drupal\drupal_telegram_sdk\TelegramBotApi
-    arguments: ['@entity_type.manager', '@drupal_telegram_sdk.processor_manager']
+    arguments: ['@drupal_telegram_sdk.processor_manager']
 
   drupal_telegram_sdk.processor_manager:
     class: Drupal\drupal_telegram_sdk\TelegramProcessorManager

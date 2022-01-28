@@ -122,7 +122,7 @@ final class TelegramBotForm extends EntityForm {
 
     try {
       $telegram->setWebhook(['url' => $string_url]);
-      \Drupal::messenger()->addError(\t('Webhook successfully installed.'));
+      \Drupal::messenger()->addStatus(\t('Webhook successfully installed.'));
     }
     catch (TelegramSDKException $e) {
       \Drupal::messenger()->addError(\t('Error set webhook (see the logs for details).'));

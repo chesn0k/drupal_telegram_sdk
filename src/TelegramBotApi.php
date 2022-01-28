@@ -2,7 +2,6 @@
 
 namespace Drupal\drupal_telegram_sdk;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
@@ -13,11 +12,6 @@ use Telegram\Bot\Objects\Update;
 class TelegramBotApi {
 
   /**
-   * The entity type manager.
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * The telegram manager.
    */
   protected TelegramProcessorManager $telegramProcessorManager;
@@ -25,13 +19,10 @@ class TelegramBotApi {
   /**
    * Constructs a TelegramBotApi object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    * @param \Drupal\drupal_telegram_sdk\TelegramProcessorManager $telegram_processor_manager
    *   The telegram plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TelegramProcessorManager $telegram_processor_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(TelegramProcessorManager $telegram_processor_manager) {
     $this->telegramProcessorManager = $telegram_processor_manager;
   }
 
