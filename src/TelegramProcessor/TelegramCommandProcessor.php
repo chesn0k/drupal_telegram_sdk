@@ -3,7 +3,6 @@
 namespace Drupal\drupal_telegram_sdk\TelegramProcessor;
 
 use Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface;
-use Drupal\drupal_telegram_sdk\Plugin\TelegramPluginInterface;
 use Drupal\drupal_telegram_sdk\Plugin\TelegramPluginManager;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;

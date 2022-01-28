@@ -17,6 +17,7 @@ This module integrates [Telegram Bot SDK](https://github.com/irazasyed/telegram-
 - Unlimited telegram bots.
 - Content entity for telegram chat.
 - Plugin for telegram commands.
+- Plugin for telegram query callback.
 - Webhook.
 
 This module does not provide any ready-made solutions and is intended for developers.
@@ -41,8 +42,8 @@ CONFIGURATION
 
 Visit the [official documentation](https://telegram-bot-sdk.readme.io/docs) before using.
 
-1. Add and save bot `/admin/structure/telegram-bot/add`.
-2. Add commands (run `drush gen telegram-command`).
+1. Add a bot and set webhook. `/admin/structure/telegram-bot/add`.
+2. Add commands.
 3. Go to telegram check the work of the bot.
 
 Your site must support HTTPS.
@@ -55,17 +56,13 @@ Some code examples:
 
 Send a message.
 ```php
-/** @var \Telegram\Bot\Api $bot_api */
-$bot_api = \Drupal::service('drupal_telegram_sdk.bot_api')->getApi('drupal_bot');
-$bot_api->sendMessage([
-  'chat_id' => 100000,
+$telegram_bot = \Drupal::entityTypeManager()->getStorage('telegram_bot')->load('drupal_bot');
+/** @var \Telegram\Bot\Api $telegram */
+$telegram = \Drupal::service('drupal_telegram_sdk.bot_api')->getTelegram($telegram_bot);
+$telegram->sendMessage([
+  'chat_id' => 'drupal',
   'text' => 'Hello world!',
 ]);
-```
-Build and run commands.
-```php
-/** @var \Telegram\Bot\Objects\Update $update */
-$update = \Drupal::service('drupal_telegram_sdk.bot_api')->commandsHandler('drupal_bot');
 ```
 
 Plugin command annotation example.
@@ -82,6 +79,20 @@ Plugin command annotation example.
  *     "login",
  *   },
  *   pattern "{password}"
+ * )
+ */
+```
+
+Plugin query callback annotation example.
+```php
+/**
+ * @TelegramCallback(
+ *   id = "set_language",
+ *   name = "set_language",
+ *   bots_id = {
+ *     "drupal_bot"
+ *   },
+ *   pattern = "{langcode}"
  * )
  */
 ```

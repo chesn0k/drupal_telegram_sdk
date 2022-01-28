@@ -7,6 +7,9 @@ use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Provider webhook route for bot entity.
+ */
 class WebhookRouteProvider implements EntityRouteProviderInterface {
 
   /**

@@ -4,19 +4,37 @@ namespace Drupal\drupal_telegram_sdk\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface;
+use Drupal\drupal_telegram_sdk\TelegramBotApi;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 
 /**
  * Telegram Bot form.
  *
  * @property \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $entity
  */
-class TelegramBotForm extends EntityForm {
+final class TelegramBotForm extends EntityForm {
+
+  /**
+   * The telegram bot api.
+   */
+  protected TelegramBotApi $telegramBotApi;
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function create(ContainerInterface $container): self {
+    $instance = parent::create($container);
+    $instance->telegramBotApi = $container->get('drupal_telegram_sdk.bot_api');
+
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state): array {
-
     $form = parent::form($form, $form_state);
 
     $form['label'] = [
@@ -58,6 +76,25 @@ class TelegramBotForm extends EntityForm {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  protected function actionsElement(array $form, FormStateInterface $form_state): array {
+    $element = parent::actionsElement($form, $form_state);
+
+    if (!$this->getEntity()->isNew()) {
+      $element['set_webhook'] = [
+        '#type' => 'submit',
+        '#button_type' => 'secondary',
+        '#value' => $this->t('Set webhook'),
+        '#weight' => 5,
+        '#submit' => [[$this, 'setWebhook']]
+      ];
+    }
+
+    return $element;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state): int {
@@ -71,6 +108,26 @@ class TelegramBotForm extends EntityForm {
     $form_state->setRedirectUrl($this->getEntity()->toUrl('collection'));
 
     return $result;
+  }
+
+  /**
+   * Sets a webhook for this bot.
+   */
+  public function setWebhook(): void {
+    /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot */
+    $telegram_bot = $this->getEntity();
+
+    $telegram = $this->telegramBotApi->getTelegram($telegram_bot);
+    $string_url = $telegram_bot->toUrl('webhook', ['absolute' => TRUE])->toString();
+
+    try {
+      $telegram->setWebhook(['url' => $string_url]);
+      \Drupal::messenger()->addError(\t('Webhook successfully installed.'));
+    }
+    catch (TelegramSDKException $e) {
+      \Drupal::messenger()->addError(\t('Error set webhook (see the logs for details).'));
+      \Drupal::logger('drupal_telegram_sdk')->error($e->getMessage());
+    }
   }
 
 }

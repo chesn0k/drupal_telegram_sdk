@@ -6,8 +6,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 use Symfony\Component\Routing\Route;
 
-
-class TelegramChatRouteProvider extends  AdminHtmlRouteProvider {
+/**
+ * Provides HTML routes for chat entity.
+ */
+class TelegramChatRouteProvider extends AdminHtmlRouteProvider {
 
   /**
    * {@inheritDoc}

@@ -23,16 +23,6 @@ class TelegramBotApi {
   protected TelegramProcessorManager $telegramProcessorManager;
 
   /**
-   * The telegram api.
-   */
-  protected ?Api $telegram;
-
-  /**
-   * The telegram bot.
-   */
-  private ?TelegramBotInterface $telegramBot;
-
-  /**
    * Constructs a TelegramBotApi object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -48,43 +38,28 @@ class TelegramBotApi {
   /**
    * Set telegram bot api.
    *
-   * @param string $id
-   *   The telegram bot id.
-   *
-   * @return \Drupal\drupal_telegram_sdk\TelegramBotApi
+   * @param \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot
+   *   The telegram bot.
    */
-  public function setTelegram(string $id): TelegramBotApi {
-    $this->telegramBot = $this->entityTypeManager->getStorage('telegram_bot')
-      ->load($id);
-
-    $this->telegram = new Api($this->telegramBot->getToken());
-
-    return $this;
+  public function getTelegram(TelegramBotInterface $telegram_bot): Api {
+    return new Api($telegram_bot->getToken());
   }
 
-  /**
-   * Gets telegram bot api.
-   *
-   * @return \Telegram\Bot\Api|NULL
-   *   Telegram SDK Api.
-   */
-  public function getTelegram(): ?Api {
-    return $this->telegram;
-  }
 
   /**
    * Process webhook.
    *
-   * @return Update
-   *  The update object.
+   * @param \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot
+   *   The telegram bot.
    */
-  public function handler(): Update {
-    $update = $this->getTelegram()->getWebhookUpdate();
+  public function handler(TelegramBotInterface $telegram_bot): Update {
+    $telegram = $this->getTelegram($telegram_bot);
+    $update = $telegram->getWebhookUpdate();
     $processors = $this->telegramProcessorManager->getProcessors();
 
     /** @var \Drupal\drupal_telegram_sdk\TelegramProcessor\TelegramProcessorInterface $processor */
     foreach ($processors as $processor) {
-      $processor->telegramProcessing($this->telegramBot, $this->getTelegram(), $update);
+      $processor->telegramProcessing($telegram_bot, $telegram, $update);
     }
 
     return $update;

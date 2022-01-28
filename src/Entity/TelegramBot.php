@@ -6,7 +6,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Annotation\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Url;
-use Telegram\Bot\Exceptions\TelegramSDKException;
 
 /**
  * Defines the telegram bot entity type.
@@ -71,26 +70,6 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
    * The telegram bot token.
    */
   protected string $token;
-
-  /**
-   * {@inheritDoc}
-   */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE): void {
-    parent::postSave($storage, $update);
-
-    /** @var \Telegram\Bot\Api $telegram_api */
-    $telegram_api = \Drupal::service('drupal_telegram_sdk.bot_api')
-      ->setTelegram($this->id);
-
-    $string_url = $this->toUrl('webhook', ['absolute' => TRUE])->toString();
-
-    try {
-      $telegram_api->getTelegram()->setWebhook(['url' => $string_url]);
-    } catch (TelegramSDKException $e) {
-      \Drupal::messenger()->addError(t('Error set webhook (see the logs for details).'));
-      \Drupal::logger('drupal_telegram_sdk')->error($e->getMessage());
-    }
-  }
 
   /**
    * {@inheritDoc}
