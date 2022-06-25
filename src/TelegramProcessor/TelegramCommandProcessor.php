@@ -102,7 +102,7 @@ class TelegramCommandProcessor implements TelegramProcessorInterface {
 
     $command = substr($text, $offset + 1, $length - 1);
 
-    if ($command_sanitized = stristr($command, '@')) {
+    if ($command_sanitized = stristr($command, '@', TRUE)) {
       $command = $command_sanitized;
     }
 
