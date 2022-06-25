@@ -4,3 +4,6 @@ description: 'Integration of the Telegram SDK library and Drupal.'
 package: Web services
 core_version_requirement: ^9
 configure: entity.telegram_bot.collection
+dependencies:
+  - drupal:options
+

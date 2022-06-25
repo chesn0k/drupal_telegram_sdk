@@ -4,14 +4,17 @@ namespace Drupal\drupal_telegram_sdk\Entity\Routing;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
+use Symfony\Component\Routing\Route;
 
-
-class TelegramChatRouteProvider extends  AdminHtmlRouteProvider {
+/**
+ * Provides HTML routes for chat entity.
+ */
+class TelegramChatRouteProvider extends AdminHtmlRouteProvider {
 
   /**
    * {@inheritDoc}
    */
-  protected function getAddFormRoute(EntityTypeInterface $entity_type) {
+  protected function getAddFormRoute(EntityTypeInterface $entity_type): ?Route {
     $route = parent::getAddFormRoute($entity_type);
 
     $route->setOption('parameters', [
@@ -26,7 +29,7 @@ class TelegramChatRouteProvider extends  AdminHtmlRouteProvider {
   /**
    * {@inheritDoc}
    */
-  protected function getEditFormRoute(EntityTypeInterface $entity_type) {
+  protected function getEditFormRoute(EntityTypeInterface $entity_type): ?Route {
     $route = parent::getEditFormRoute($entity_type);
 
     $route->setOption('parameters', [
@@ -44,7 +47,7 @@ class TelegramChatRouteProvider extends  AdminHtmlRouteProvider {
   /**
    * {@inheritDoc}
    */
-  protected function getDeleteFormRoute(EntityTypeInterface $entity_type) {
+  protected function getDeleteFormRoute(EntityTypeInterface $entity_type): ?Route {
     $route = parent::getDeleteFormRoute($entity_type);
 
     $route->setOption('parameters', [
@@ -62,7 +65,7 @@ class TelegramChatRouteProvider extends  AdminHtmlRouteProvider {
   /**
    * {@inheritDoc}
    */
-  protected function getCollectionRoute(EntityTypeInterface $entity_type) {
+  protected function getCollectionRoute(EntityTypeInterface $entity_type): ?Route {
     $route = parent::getCollectionRoute($entity_type);
 
     $route->setOption('parameters', [

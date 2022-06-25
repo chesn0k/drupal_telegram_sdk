@@ -12,7 +12,7 @@ interface TelegramChatInterface extends ContentEntityInterface {
    * @return string
    *   The label telegram chat.
    */
-  public function getLabel();
+  public function getLabel(): string;
 
   /**
    * Sets the telegram chat label.
@@ -22,25 +22,25 @@ interface TelegramChatInterface extends ContentEntityInterface {
    *
    * @return $this
    */
-  public function setLabel(string $label);
+  public function setLabel(string $label): self;
 
   /**
    * Gets the telegram chat chat_id.
    *
-   * @return int
+   * @return string
    *  The telegram chat chat_id.
    */
-  public function getChatId();
+  public function getChatId(): string;
 
   /**
    * Sets the telegram chat_id.
    *
-   * @param int $chat_id
+   * @param string $chat_id
    *   The telegram chat chat_id.
    *
    * @return $this
    */
-  public function setChatId(int $chat_id);
+  public function setChatId(string $chat_id): TelegramChatInterface;
 
   /**
    * Gets type telegram chat.
@@ -48,7 +48,7 @@ interface TelegramChatInterface extends ContentEntityInterface {
    * @return string
    *   The type telegram chat.
    */
-  public function getTypeChat();
+  public function getTypeChat(): string;
 
   /**
    * Sets type telegram chat.
@@ -59,6 +59,6 @@ interface TelegramChatInterface extends ContentEntityInterface {
    *
    * @return $this
    */
-  public function setTypeChat(string $chat_type);
+  public function setTypeChat(string $chat_type): TelegramChatInterface;
 
 }

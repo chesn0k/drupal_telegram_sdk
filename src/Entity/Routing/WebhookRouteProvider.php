@@ -7,12 +7,15 @@ use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Provider webhook route for bot entity.
+ */
 class WebhookRouteProvider implements EntityRouteProviderInterface {
 
   /**
    * {@inheritDoc}
    */
-  public function getRoutes(EntityTypeInterface $entity_type) {
+  public function getRoutes(EntityTypeInterface $entity_type): RouteCollection {
     $collection = new RouteCollection();
     $entity_type_id = $entity_type->id();
 
@@ -32,7 +35,7 @@ class WebhookRouteProvider implements EntityRouteProviderInterface {
    * @return \Symfony\Component\Routing\Route|null
    *   The generated route.
    */
-  protected function getWebhookRoute(EntityTypeInterface $entity_type) {
+  protected function getWebhookRoute(EntityTypeInterface $entity_type): ?Route{
     if ($entity_type->hasLinkTemplate('webhook')) {
       $route = new Route($entity_type->getLinkTemplate('webhook'));
       $route

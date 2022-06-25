@@ -8,12 +8,21 @@ namespace Drupal\drupal_telegram_sdk\Event;
 final class DrupalTelegramEvents {
 
   /**
-   * Name of the event fired after command execution.
+   * Name of the event fired after webhook processing.
    *
    * @Event
    *
-   * @see \Drupal\drupal_telegram_sdk\Event\CommandsAfterProcessing
+   * @see \Drupal\drupal_telegram_sdk\Event\WebhookAfterProcessing
    */
-  const COMMANDS_AFTER_PROCESSING = 'drupal_telegram_sdk.commands.after_processing';
+  const WEBHOOK_AFTER_PROCESSING = 'drupal_telegram_sdk.webhook.after_processing';
+
+  /**
+   * Name of the event fired after webhook processing.
+   *
+   * @Event
+   *
+   * @see \Drupal\drupal_telegram_sdk\Event\WebhookBeforeProcessing
+   */
+  const WEBHOOK_BEFORE_PROCESSING = 'drupal_telegram_sdk.webhook.before_processing';
 
 }

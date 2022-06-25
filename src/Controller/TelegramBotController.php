@@ -3,11 +3,14 @@
 namespace Drupal\drupal_telegram_sdk\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\drupal_telegram_sdk\Event\CommandsAfterProcessing;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\drupal_telegram_sdk\Event\DrupalTelegramEvents;
+use Drupal\drupal_telegram_sdk\Event\WebhookAfterProcessing;
+use Drupal\drupal_telegram_sdk\Event\WebhookBeforeProcessing;
+use Drupal\drupal_telegram_sdk\TelegramBotApi;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -17,33 +20,27 @@ class TelegramBotController implements ContainerInjectionInterface {
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The telegram bot api.
-   *
-   * @var \Drupal\drupal_telegram_sdk\TelegramBotApi
    */
-  protected $telegramBotApi;
+  protected TelegramBotApi $telegramBotApi;
+
+  /**
+   * The event dispatcher.
+   */
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * {@inheritDoc}
    */
-  public static function create(ContainerInterface $container) {
-    $instance = new static();
+  public static function create(ContainerInterface $container): self {
+    $instance = new self();
     $instance->entityTypeManager = $container->get('entity_type.manager');
-    $instance->eventDispatcher = $container->get('event_dispatcher');
     $instance->telegramBotApi = $container->get('drupal_telegram_sdk.bot_api');
+    $instance->eventDispatcher = $container->get('event_dispatcher');
 
     return $instance;
   }
@@ -51,7 +48,7 @@ class TelegramBotController implements ContainerInjectionInterface {
   /**
    * Telegram webhook.
    */
-  public function webhook(Request $request, string $token) {
+  public function webhook(string $token): JsonResponse {
     $telegram_bot_storage = $this->entityTypeManager->getStorage('telegram_bot');
     $telegram_bots = $telegram_bot_storage->loadByProperties([
       'token' => $token,
@@ -64,11 +61,16 @@ class TelegramBotController implements ContainerInjectionInterface {
 
     /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot */
     $telegram_bot = reset($telegram_bots);
-    $telegram_api = $this->telegramBotApi->getTelegramBotApi($telegram_bot->id());
-    $update = $telegram_api->commandsHandler(TRUE);
 
-    $event = new CommandsAfterProcessing($update, $telegram_api);
-    $this->eventDispatcher->dispatch(DrupalTelegramEvents::COMMANDS_AFTER_PROCESSING, $event);
+    $before_processing = new WebhookBeforeProcessing($telegram_bot, $this->telegramBotApi->getTelegram($telegram_bot));
+    $this->eventDispatcher->dispatch(DrupalTelegramEvents::WEBHOOK_BEFORE_PROCESSING, $before_processing);
+
+    if (!$before_processing->isLockProcessing()) {
+      $update = $this->telegramBotApi->handler($telegram_bot);
+
+      $after_processing = new WebhookAfterProcessing($telegram_bot, $this->telegramBotApi->getTelegram($telegram_bot), $update);
+      $this->eventDispatcher->dispatch(DrupalTelegramEvents::WEBHOOK_AFTER_PROCESSING, $after_processing);
+    }
 
     return new JsonResponse(['message' => 'Webhook processed.']);
   }

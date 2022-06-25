@@ -16,10 +16,8 @@ class TelegramChatListBuilder extends EntityListBuilder {
 
   /**
    * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface;
    */
-  protected $routeMatch;
+  protected RouteMatchInterface $routeMatch;
 
   /**
    * Constructs a new TelegramChatListBuilder object.
@@ -38,7 +36,7 @@ class TelegramChatListBuilder extends EntityListBuilder {
   /**
    * {@inheritDoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type): static {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage('telegram_chat'),
@@ -49,7 +47,7 @@ class TelegramChatListBuilder extends EntityListBuilder {
   /**
    * {@inheritDoc}
    */
-  public function load() {
+  public function load(): array {
     $telegram_bot = $this->routeMatch->getParameter('telegram_bot');
     return $this->storage->loadByProperties(['bot' => $telegram_bot->id()]);
   }
@@ -57,7 +55,7 @@ class TelegramChatListBuilder extends EntityListBuilder {
   /**
    * {@inheritDoc}
    */
-  public function buildHeader() {
+  public function buildHeader(): array {
     $header = [
       'id' => $this->t('ID'),
       'label' => $this->t('label'),
@@ -70,7 +68,7 @@ class TelegramChatListBuilder extends EntityListBuilder {
   /**
    * {@inheritDoc}
    */
-  public function buildRow(EntityInterface $entity) {
+  public function buildRow(EntityInterface $entity): array {
     $row = [
       'id' => $entity->id(),
       'label' => $entity->getLabel(),

@@ -5,7 +5,7 @@ namespace Drupal\drupal_telegram_sdk\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Annotation\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Telegram\Bot\Exceptions\TelegramSDKException;
+use Drupal\Core\Url;
 
 /**
  * Defines the telegram bot entity type.
@@ -58,54 +58,23 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
 
   /**
    * The telegram bot ID.
-   *
-   * @var string
    */
-  protected $id;
+  protected string $id;
 
   /**
    * The telegram bot label.
-   *
-   * @var string
    */
-  protected $label;
+  protected string $label;
 
   /**
-   * The telegram bot status.
-   *
-   * @var bool
+   * The telegram bot token.
    */
-  protected $status;
-
-  /**
-   * The telegram bot token
-   *
-   * @var string
-   */
-  protected $token;
+  protected string $token;
 
   /**
    * {@inheritDoc}
    */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    /** @var \Telegram\Bot\Api $telegram_api */
-    $telegram_api = \Drupal::service('drupal_telegram_sdk.bot_api')
-      ->getTelegramBotApi($this->id);
-
-    $string_url = $this->toUrl('webhook', ['absolute' => TRUE])->toString();
-    try {
-      $telegram_api->setWebhook(['url' => $string_url]);
-    } catch (TelegramSDKException $e) {
-      \Drupal::messenger()->addError($e->getMessage());
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+  public static function preDelete(EntityStorageInterface $storage, array $entities): void {
     parent::preDelete($storage, $entities);
     $telegram_chat_storage = \Drupal::entityTypeManager()->getStorage('telegram_chat');
 
@@ -121,7 +90,19 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
   /**
    * {@inheritDoc}
    */
-  protected function urlRouteParameters($rel) {
+  public function toUrl($rel = 'edit-form', array $options = []): Url {
+    if ($rel === 'webhook') {
+      $options['https'] = TRUE;
+      $options += ['language' => $this->languageManager()->getDefaultLanguage()];
+    }
+
+    return parent::toUrl($rel, $options);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function urlRouteParameters($rel): array {
     $uri_route_parameters = parent::urlRouteParameters($rel);
 
     if ($rel === 'webhook') {
@@ -134,14 +115,14 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
   /**
    * {@inheritDoc}
    */
-  public function getLabel() {
+  public function getLabel(): string {
     return $this->label;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setLabel(string $label) {
+  public function setLabel(string $label): TelegramBotInterface {
     $this->label = $label;
 
     return $this;
@@ -150,14 +131,14 @@ class TelegramBot extends ConfigEntityBundleBase implements TelegramBotInterface
   /**
    * {@inheritDoc}
    */
-  public function getToken() {
+  public function getToken(): string {
     return $this->token;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setToken(string $token) {
+  public function setToken(string $token): TelegramBotInterface {
     $this->token = $token;
 
     return $this;

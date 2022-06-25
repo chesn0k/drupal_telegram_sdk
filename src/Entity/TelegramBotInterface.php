@@ -15,7 +15,7 @@ interface TelegramBotInterface extends ConfigEntityInterface {
    * @return string
    *  The telegram bot label.
    */
-  public function getLabel();
+  public function getLabel(): string;
 
   /**
    * Sets the telegram bot label.
@@ -25,7 +25,7 @@ interface TelegramBotInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setLabel(string $label);
+  public function setLabel(string $label): TelegramBotInterface;
 
   /**
    * Gets the telegram bot token.
@@ -33,7 +33,7 @@ interface TelegramBotInterface extends ConfigEntityInterface {
    * @return string
    *  The telegram bot token.
    */
-  public function getToken();
+  public function getToken(): string;
 
   /**
    * Sets the telegram bot token.
@@ -43,6 +43,6 @@ interface TelegramBotInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setToken(string $token);
+  public function setToken(string $token): TelegramBotInterface;
 
 }

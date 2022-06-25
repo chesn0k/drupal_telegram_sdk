@@ -3,6 +3,7 @@
 namespace Drupal\drupal_telegram_sdk\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines telegram_command annotation object.
@@ -13,47 +14,35 @@ class TelegramCommand extends Plugin {
 
   /**
    * The plugin ID.
-   *
-   * @var string
    */
-  public $id;
+  public string $id;
 
   /**
    * @see \Telegram\Bot\Commands\Command::$name
-   *
-   * @var string
    */
-  public $name;
+  public string $name;
 
   /**
    * @see \Telegram\Bot\Commands\Command::$description
    *
-   * @var \Drupal\Core\Annotation\Translation
-   *
    * @ingroup plugin_translatable
    */
-  public $description;
+  public Translation $description;
 
   /**
    * List of bots for which this command is available, empty array if
    * the command is available to all bots.
-   *
-   * @var array
    */
-  public $bots_id = [];
+  public array $bots_id = [];
 
   /**
    * @see \Telegram\Bot\Commands\Command::$aliases
-   *
-   * @var array
    */
-  public $aliases = [];
+  public array $aliases = [];
 
   /**
    * @see \Telegram\Bot\Commands\Command::$pattern
-   *
-   * @var string
    */
-  public $pattern = '';
+  public string $pattern = '';
 
 }

@@ -2,59 +2,58 @@
 
 namespace Drupal\drupal_telegram_sdk;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager;
+use Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface;
 use Telegram\Bot\Api;
+use Telegram\Bot\Objects\Update;
 
+/**
+ * Telegram Bot API Service.
+ */
 class TelegramBotApi {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * The telegram manager.
    */
-  protected $entityTypeManager;
+  protected TelegramProcessorManager $telegramProcessorManager;
 
   /**
-   * The telegram command manager.
+   * Constructs a TelegramBotApi object.
    *
-   * @var \Drupal\drupal_telegram_sdk\Plugin\TelegramCommandPluginManager
+   * @param \Drupal\drupal_telegram_sdk\TelegramProcessorManager $telegram_processor_manager
+   *   The telegram plugin manager.
    */
-  protected $telegramCommandManager;
-
-  /**
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TelegramCommandPluginManager $telegram_command_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->telegramCommandManager = $telegram_command_manager;
+  public function __construct(TelegramProcessorManager $telegram_processor_manager) {
+    $this->telegramProcessorManager = $telegram_processor_manager;
   }
 
   /**
-   * Gets telegram bot api.
+   * Set telegram bot api.
    *
-   * @param string $id
-   *  The id telegram bot.
-   *
-   * @return \Telegram\Bot\Api
+   * @param \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot
+   *   The telegram bot.
    */
-  public function getTelegramBotApi(string $id) {
-    /** @var \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot */
-    $telegram_bot = $this->entityTypeManager->getStorage('telegram_bot')
-      ->load($id);
-    $telegram_api = new Api($telegram_bot->getToken());
+  public function getTelegram(TelegramBotInterface $telegram_bot): Api {
+    return new Api($telegram_bot->getToken());
+  }
 
-    $plugin_definitions = $this->telegramCommandManager->getDefinitions();
-    foreach ($plugin_definitions as $plugin_id => $definition) {
-      if (empty($definition['bots_id']) || in_array($telegram_bot->id(), $definition['bots_id'])) {
-        $command = $this->telegramCommandManager->createInstance($plugin_id, $definition);
-        $telegram_api->addCommand($command);
-      }
+
+  /**
+   * Process webhook.
+   *
+   * @param \Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface $telegram_bot
+   *   The telegram bot.
+   */
+  public function handler(TelegramBotInterface $telegram_bot): Update {
+    $telegram = $this->getTelegram($telegram_bot);
+    $update = $telegram->getWebhookUpdate();
+    $processors = $this->telegramProcessorManager->getProcessors();
+
+    /** @var \Drupal\drupal_telegram_sdk\TelegramProcessor\TelegramProcessorInterface $processor */
+    foreach ($processors as $processor) {
+      $processor->telegramProcessing($telegram_bot, $telegram, $update);
     }
 
-    return $telegram_api;
+    return $update;
   }
-
 
 }
