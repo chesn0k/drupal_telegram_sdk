@@ -4,7 +4,7 @@ namespace Drupal\drupal_telegram_sdk\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\drupal_telegram_sdk\Entity\TelegramBotInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\drupal_telegram_sdk\TelegramBotApi;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -19,7 +19,12 @@ final class TelegramBotForm extends EntityForm {
   /**
    * The telegram bot api.
    */
-  protected TelegramBotApi $telegramBotApi;
+  private TelegramBotApi $telegramBotApi;
+
+  /**
+   * The logger channel.
+   */
+  private LoggerChannelInterface $logger;
 
   /**
    * {@inheritDoc}
@@ -27,6 +32,7 @@ final class TelegramBotForm extends EntityForm {
   public static function create(ContainerInterface $container): self {
     $instance = parent::create($container);
     $instance->telegramBotApi = $container->get('drupal_telegram_sdk.bot_api');
+    $instance->logger = $container->get('logger.factory')->get('drupal_telegram_sdk');
 
     return $instance;
   }
@@ -122,11 +128,11 @@ final class TelegramBotForm extends EntityForm {
 
     try {
       $telegram->setWebhook(['url' => $string_url]);
-      \Drupal::messenger()->addStatus(\t('Webhook successfully installed.'));
+      $this->messenger()->addStatus(\t('Webhook successfully installed.'));
     }
     catch (TelegramSDKException $e) {
-      \Drupal::messenger()->addError(\t('Error set webhook (see the logs for details).'));
-      \Drupal::logger('drupal_telegram_sdk')->error($e->getMessage());
+      $this->messenger()->addError(\t('Error set webhook (see the logs for details).'));
+      $this->logger->error($e->getMessage());
     }
   }
 
