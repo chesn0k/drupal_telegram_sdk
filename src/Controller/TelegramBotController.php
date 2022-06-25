@@ -4,7 +4,6 @@ namespace Drupal\drupal_telegram_sdk\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\drupal_telegram_sdk\Event\DrupalTelegramEvents;
 use Drupal\drupal_telegram_sdk\Event\WebhookAfterProcessing;
 use Drupal\drupal_telegram_sdk\Event\WebhookBeforeProcessing;
 use Drupal\drupal_telegram_sdk\TelegramBotApi;
@@ -63,13 +62,13 @@ class TelegramBotController implements ContainerInjectionInterface {
     $telegram_bot = reset($telegram_bots);
 
     $before_processing = new WebhookBeforeProcessing($telegram_bot, $this->telegramBotApi->getTelegram($telegram_bot));
-    $this->eventDispatcher->dispatch(DrupalTelegramEvents::WEBHOOK_BEFORE_PROCESSING, $before_processing);
+    $this->eventDispatcher->dispatch($before_processing);
 
     if (!$before_processing->isLockProcessing()) {
       $update = $this->telegramBotApi->handler($telegram_bot);
 
       $after_processing = new WebhookAfterProcessing($telegram_bot, $this->telegramBotApi->getTelegram($telegram_bot), $update);
-      $this->eventDispatcher->dispatch(DrupalTelegramEvents::WEBHOOK_AFTER_PROCESSING, $after_processing);
+      $this->eventDispatcher->dispatch($after_processing);
     }
 
     return new JsonResponse(['message' => 'Webhook processed.']);
